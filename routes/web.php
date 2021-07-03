@@ -13,6 +13,13 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$router->group(['prefix' => '/api/v1'], function() use($router){
+    $router->group(['prefix' => 'states'], function() use($router){
+        $router->get('/', ['as' => 'api.state.index', 'uses' => 'StateController@index']);
+        $router->get('/{state}', ['as' => 'api.state.show', 'uses' => 'StateController@show']);
+        $router->post('/', ['as' => 'api.state.store', 'uses' => 'StateController@store']);
+        $router->put('/{state}', ['as' => 'api.state.update', 'uses' => 'StateController@update']);
+        $router->delete('/{state}', ['as' => 'api.state.delete', 'uses' => 'StateController@delete']);
+    });
 });
+
