@@ -2,42 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\State;
+use App\Models\City;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Class StateController
+ * Class CityController
  * @package App\Http\Controllers
  */
-class StateController extends Controller
+class CityController extends Controller
 {
     /**
-     * @return State[]|Collection
+     * @param Request $request
+     * @return City[]|Collection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return (new State)->newQuery()
-            ->orderBy('name', 'asc')
+        $query = (new City)->newQuery()
+            ->with(['state']);
+        $stateId = (int)$request->get('state_id');
+        if ($stateId) {
+            $query->where('state_id', '=', $stateId);
+        }
+        return $query->orderBy('name', 'asc')
             ->get();
     }
 
     /**
      * @param Request $request
-     * @return State
+     * @return City
      * @throws ValidationException
      */
     public function store(Request $request)
     {
         $this->validateRequest($request);
-        return $this->save($request, new State);
+        return $this->save($request, new City);
     }
 
     /**
      * @param string $id
-     * @return State
+     * @return City
      */
     public function show($id)
     {
@@ -47,7 +53,7 @@ class StateController extends Controller
     /**
      * @param Request $request
      * @param string $id
-     * @return State
+     * @return City
      * @throws ValidationException
      */
     public function update(Request $request, $id)
@@ -58,22 +64,22 @@ class StateController extends Controller
 
     /**
      * @param string $id
-     * @return State|Model|null
+     * @return City|Model|null
      */
     protected function findById($id)
     {
-        return (new State)->newQuery()->findOrFail($id);
+        return (new City)->newQuery()->findOrFail($id);
     }
 
     /**
      * @param Request $request
-     * @param State $state
-     * @return State
+     * @param City $state
+     * @return City
      */
-    protected function save(Request $request, State $state)
+    protected function save(Request $request, City $city)
     {
-        $state->fill($request->all())->save();
-        return $state;
+        $city->fill($request->all())->save();
+        return $city;
     }
 
     /**
@@ -83,8 +89,8 @@ class StateController extends Controller
     protected function validateRequest(Request $request)
     {
         $this->validate($request, [
-            'name' => 'bail|string|required|min:3|max:30',
-            'code' => 'bail|string|required|size:2',
+            'name'      => 'bail|string|required|min:3|max:100',
+            'state_id'  => 'bail|integer|required',
         ]);
     }
 
@@ -97,7 +103,7 @@ class StateController extends Controller
         $model = $this->findById($id);
         $model->delete();
         return [
-            'message' => sprintf('Estado #%s excluído com sucesso.', $id)
+            'message' => sprintf('Cidade #%s excluída com sucesso.', $id)
         ];
     }
 }

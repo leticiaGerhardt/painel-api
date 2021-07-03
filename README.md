@@ -21,17 +21,26 @@ as configurações do ambiente.
 
 ```cp .env.example .env```
 
-3) Gerar uma chave e colocar no ``APP_KEY=`` do arquivo ```.env```
-
-```php artisan key:generate```
-
-4) Instalar as dependências do composer.
+3) Instalar as dependências do composer.
 
 ```composer install```
 
-5) Levantar o servidor
+4) Gerar uma chave e colocar no ``APP_KEY=`` do arquivo ```.env```
 
-```php artisan serve```
+```php artisan key:generate```
+
+5) Rodar as migrations e seeds
+```
+php artisan migrate
+php artisan db:seed
+```
+
+6) Ir até a pasta ```public``` e levantar o servidor
+
+```
+cd public
+php -S localhost:8000
+```
 
 ## Repositórios
 
@@ -42,5 +51,6 @@ as configurações do ambiente.
 #### 2021-07-02 v0.1.0
 * Instalação do lumen
 * Migrations de states, cities e ditricts
+* Seeders de states, cities e districts  
 * Models de State, City e District
 

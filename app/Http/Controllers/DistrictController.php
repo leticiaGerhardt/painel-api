@@ -2,42 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\State;
+use App\Models\District;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Class StateController
+ * Class DistrictController
  * @package App\Http\Controllers
  */
-class StateController extends Controller
+class DistrictController extends Controller
 {
     /**
-     * @return State[]|Collection
+     * @param Request $request
+     * @return District[]|Collection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return (new State)->newQuery()
-            ->orderBy('name', 'asc')
+        $query = (new District)->newQuery()
+            ->with(['city']);
+        $districtId = (int)$request->get('city_id');
+        if ($districtId) {
+            $query->where('city_id', '=', $districtId);
+        }
+        return $query->orderBy('name', 'asc')
             ->get();
     }
 
     /**
      * @param Request $request
-     * @return State
+     * @return District
      * @throws ValidationException
      */
     public function store(Request $request)
     {
         $this->validateRequest($request);
-        return $this->save($request, new State);
+        return $this->save($request, new District);
     }
 
     /**
      * @param string $id
-     * @return State
+     * @return District
      */
     public function show($id)
     {
@@ -47,7 +53,7 @@ class StateController extends Controller
     /**
      * @param Request $request
      * @param string $id
-     * @return State
+     * @return District
      * @throws ValidationException
      */
     public function update(Request $request, $id)
@@ -58,22 +64,22 @@ class StateController extends Controller
 
     /**
      * @param string $id
-     * @return State|Model|null
+     * @return District|Model|null
      */
     protected function findById($id)
     {
-        return (new State)->newQuery()->findOrFail($id);
+        return (new District)->newQuery()->findOrFail($id);
     }
 
     /**
      * @param Request $request
-     * @param State $state
-     * @return State
+     * @param District $state
+     * @return District
      */
-    protected function save(Request $request, State $state)
+    protected function save(Request $request, District $district)
     {
-        $state->fill($request->all())->save();
-        return $state;
+        $district->fill($request->all())->save();
+        return $district;
     }
 
     /**
@@ -83,8 +89,8 @@ class StateController extends Controller
     protected function validateRequest(Request $request)
     {
         $this->validate($request, [
-            'name' => 'bail|string|required|min:3|max:30',
-            'code' => 'bail|string|required|size:2',
+            'name'      => 'bail|string|required|min:3|max:100',
+            'city_id'   => 'bail|integer|required',
         ]);
     }
 
@@ -97,7 +103,7 @@ class StateController extends Controller
         $model = $this->findById($id);
         $model->delete();
         return [
-            'message' => sprintf('Estado #%s excluído com sucesso.', $id)
+            'message' => sprintf('Bairro #%s excluído com sucesso.', $id)
         ];
     }
 }
