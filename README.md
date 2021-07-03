@@ -11,6 +11,10 @@ Deverá oferecer uma API Rest para os seguintes recursos:
 * Composer 2.*
 * MySQL 8.0.*
 
+## Ferramentas utilizadas
+* MySQL Workbench
+* Postman
+
 ## Instalação
 
 1) Criar um banco de dados.
@@ -42,9 +46,22 @@ cd public
 php -S localhost:8000
 ```
 
-## Repositórios
+## Modelagem
+
+### Endereço
+![addressess](database/schema/images/addresess.png "Addresses")
+
+## Testes
+
+Para testes foi utilizado o [Postman](https://www.postman.com/).
+A collection e variáveis de ambiente estão na pasta
+``` resources/postman ```.
+
+## Links
 
 * [https://github.com/leticiagerhardt/painel-api](https://github.com/leticiagerhardt/painel-api)
+* [https://lumen.laravel.com/](https://lumen.laravel.com/)
+* [https://www.postman.com/](https://www.postman.com/)
 
 ## Changelog
 
