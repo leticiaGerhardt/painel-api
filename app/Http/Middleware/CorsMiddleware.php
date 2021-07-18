@@ -3,18 +3,26 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-class ExampleMiddleware
+class CorsMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  Request  $request
+     * @param Closure $next
+     * @return Response
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        /* @var $response Response */
+        $response = $next($request);
+        $response->header('Access-Control-Allow-Origin', '*');
+        $response->header('Access-Control-Allow-Headers', '*');
+        $response->header('Access-Control-Allow-Methods', '*');
+
+        return $response;
     }
 }
